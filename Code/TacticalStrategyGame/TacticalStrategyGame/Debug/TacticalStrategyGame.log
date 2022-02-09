@@ -1,0 +1,3 @@
+﻿  main.cpp
+C:\Users\HP\Documents\GitHub\TacticalStrategyGame\Code\TacticalStrategyGame\TacticalStrategyGame\main.cpp(130,5): error C2760: синтаксическая ошибка: непредвиденный токен "}"; требуется ";"
+C:\Users\HP\Documents\GitHub\TacticalStrategyGame\Code\TacticalStrategyGame\TacticalStrategyGame\main.cpp(131): message : выполняется компиляция ссылки на экземпляр класс шаблон функции "holder_print<Obj,Args...>"

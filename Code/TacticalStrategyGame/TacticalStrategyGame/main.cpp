@@ -1,7 +1,11 @@
+#include <functional>
 #include <iostream>
-#include <memory>
-#include <vector>
 #include <list>
+#include <memory>
+#include <variant>
+#include <vector>
+#include <tuple>
+#include <typeinfo>
 
 
 template<class T>
@@ -24,7 +28,6 @@ auto make_sticky2(Args&&... args) -> decltype(std::make_shared<valid_wrapper<T>>
     return std::make_shared<valid_wrapper<T>>(std::forward<Args>(args)...);
 }
 
-#include <typeinfo>
 
 
 template<typename T>
@@ -68,6 +71,9 @@ public:
     void print(OfType<A>) {
         std::cout << typeid(A).name() << std::endl;
     }
+    constexpr std::tuple<A&, Args&...> getAllComponents() {
+        return std::tuple_cat(std::tie(val), ComponentArray<Args...>::getAllComponents());
+    }
 };
 
 template<>
@@ -81,6 +87,9 @@ public:
     void print(OfType<T>) {
         std::cout << "NULL" << std::endl;
     }
+    constexpr std::tuple<> getAllComponents() {
+        return std::tie();
+    }
 };
 
 template<class ...Args>
@@ -90,22 +99,65 @@ public:
     T* getComponent() {
         return ComponentArray<Args...>::getComponent(OfType<T>());
     }
+    constexpr int componentCount() const {
+        return sizeof...(Args);
+    }
+    constexpr std::tuple<Args&...> getAllComponents() {
+        return ComponentArray<Args...>::getAllComponents();
+    }
 };
 
-class A {
+
+
+template<class ...Args>
+class EntityVariant {
+private:
+    std::unique_ptr<void> ptr;
+public:
+
+    template<class T>
+    T* getComponent() {
+        return components.getComponent<T>();
+    }
+};
+
+using AllComponentVariantType = std::variant<int>;
+
+class Entity {
+private:
+    AllComponentVariantType components;
 public:
     template<class T>
-    static constexpr T big_value = 5;
+    T* getComponent() {
+        return components.getComponent<T>();
+    }
+    constexpr int componentCount() const {
+        return components.componentCount();
+    }
+    constexpr std::tuple<Args&...> getAllComponents() {
+        return ComponentArray<Args...>::getAllComponents();
+    }
 };
-    
+
+
+class EntityManager {
+private:
+    std::vector<AllComponentVariantType> arr;
+public:
+
+};
+
+
+
+
+
 int main() {
-    ComponentArray2<int, double, std::string> comp;
+    ComponentArray2<int, double> comp;
+    auto val = comp.getAllComponents();
     *comp.getComponent<int>() = 5; 
-    *comp.getComponent<double>() = 7.3;
-    *comp.getComponent<std::string>() = "Hello";
+    std::get<0>(val) = 3;
     std::cout << *comp.getComponent<int>() << std::endl;
-    std::cout << *comp.getComponent<double>() << std::endl;
-    std::cout << *comp.getComponent<std::string>() << std::endl;
+
 
     return 0;
 }   

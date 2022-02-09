@@ -30,3 +30,8 @@
 *.exe
 *.out
 *.app
+/Code/TacticalStrategyGame/Debug
+/Code/TacticalStrategyGame/.vs/TacticalStrategyGame/v16/ipch/AutoPCH
+/Code/TacticalStrategyGame/.vs/TacticalStrategyGame/v16/Browse.VC.db-shm
+/Code/TacticalStrategyGame/.vs/TacticalStrategyGame/v16/Browse.VC.db-wal
+/Code/TacticalStrategyGame/.vs/TacticalStrategyGame/v16/Browse.VC.opendb
